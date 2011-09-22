@@ -99,7 +99,7 @@ sub FSyntaxError($) {
 	 CPULOAD    - CPU Load
 	 MEM        - Memory Usage
 	 SWAP       - Swap Usage
-	 DISK       - Vol Usage Precentage
+	 DISK       - Disk Usage Percentage
 	 
 	 # Not Implemented
 	 FAN        - Fan Fail
