@@ -1,0 +1,13 @@
+### Creating Excluded Files List
+##################################
+for exc in $COMMON_EXCLUDE $LOCAL_EXCLUDE
+do
+        export EXCLUDED_FILES="$EXCLUDED_FILES --exclude=$exc"
+done
+
+### Tarring
+###############
+tar $EXCLUDED_FILES -jcf $REMOTEBACKUP $FILELIST &> $REMOTELOG
+ERR=`expr $ERR + $?`
+rm -rf ${LOCALDIR}
+exit $ERR

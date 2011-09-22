@@ -1,0 +1,31 @@
+# 
+# Mysql Databases
+# 
+# MYSQLDB="`mysql -N -e 'show databases'`"
+# 
+# for mysqldb in $MYSQLDB
+# do
+#         mysqldump $mysqldb > $LOCALDIR/$mysqldb.sql
+# done
+
+# 
+# List of perl modules
+# 
+# /usr/bin/perldoc perllocal &> $LOCALDIR/perl_local_modules.txt
+
+
+
+
+
+
+
+### Excluded Files (user)
+#############################
+#LOCAL_EXCLUDE="" # without the defaults
+LOCAL_EXCLUDE="$LOCAL_EXCLUDE "
+
+### Files to backup (user)
+#########################################
+#export FILELIST="" # without the defaults
+export FILELIST="$FILELIST "
+

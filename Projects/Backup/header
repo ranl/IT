@@ -1,0 +1,19 @@
+### Removing Old Files
+###########################
+[ -f "$REMOTEBACKUP" ] && rm -f "$REMOTEBACKUP"
+[ -f "$REMOTELOG" ] && rm -f "$REMOTELOG"
+
+### Creating Local Directory
+##############################
+mkdir -p ${LOCALDIR}
+
+ERR="0"
+
+### Excluded Files
+######################
+LOCAL_EXCLUDE=""
+
+### Files to backup
+#########################################
+export FILELIST="$COMMON_FILES"
+export FILELIST="$FILELIST "
