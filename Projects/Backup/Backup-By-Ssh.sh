@@ -91,7 +91,7 @@ then
 fi
 
 # Creating Script File
-SCRIPTPATH="$var_dir/${REMOTEHOST}"
+SCRIPTPATH="$var_dir/${REMOTEHOST}.sh"
 echo $script_shell > "${SCRIPTPATH}"
 for i in REMOTEHOST REMOTEBACKUP DATESCRIPT REMOTELOG LOCALDIR COMMON_FILES COMMON_EXCLUDE
 do
@@ -103,10 +103,11 @@ then
 	cat "$HOST_SCRIPTPATH" >> "${SCRIPTPATH}"
 fi
 cat "$BP_SCRIPTSPATH/footer" >> "${SCRIPTPATH}"
+chmod +x "${SCRIPTPATH}"
 
 
 # Creating Tar File
-ssh $REMOTEHOST "$SCRIPTPATH"
+scp -p "${SCRIPTPATH}" $REMOTEHOST:/tmp/ && ssh $REMOTEHOST /tmp/${REMOTEHOST}.sh
 
 # Scp the Tar file / Notify Status by Mail
 if [ $? == 0 ]

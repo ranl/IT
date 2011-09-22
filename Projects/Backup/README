@@ -1,0 +1,17 @@
+# INFO
+
+This projects is for fast backup of linux servers on the network via SSH & SCP
+
+The server that will run these script will have to configure key authentication on the client system (with user root)
+
+The Backup-By-Ssh.sh gets it parameter from command line and then go through its configuration to backup the servers
+specific settings can be configured to each server as a script that will be located in the scripts dir.
+
+It goes something like this
+
+the Backup-By-Ssh.sh compile a script that will run on the client host via the header and footer files & a specific script from the scripts dir.
+then the script get copied via scp to the client host and executed.
+after this there will be a tbz file in the /tmp of the client and it will be copied to the specified location.
+
+Please use with caution and go through the script before implementing it...
+

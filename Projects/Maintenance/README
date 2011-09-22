@@ -1,0 +1,27 @@
+########################################################## INFO ###########################################################
+# This script is used to create a maintenance jira when configured
+# The script needs to run once a day, it searches for *.xml files in the conf directory where the script file is located
+# Sample configuration file is conf/template.xml.
+# <createnow>   - a comma separated filed which stores the days to open the isse - d-m
+# <project>     - Jira project key
+# <type>        - ID od the issue type (can be found in the SQL database under the issuetype table)
+# <summary>     - Summary field
+# <assignee>    - assignee field
+# <description> - description field
+# 
+#
+# Hash Example (not needed in this script ....)
+# my %issue_hash = (
+#     'project' => 'IT',
+#     'type' => 77,
+#     'summary' => 'Issue created via XMLRPC 2',
+#     'assignee' => 'ran',
+#     'customFieldValues' => [{'customfieldId' => 'customfield_10352', 'values' => ['IT Assistance On Sitting Place Movment']}],
+#     'description' => 'Created with a Perl client 2'
+# );
+# Note ! - for the field to be populate itd has to be visible in the creation screen
+# 
+# 
+# the conf directory will need to have rw permission and be at the same directory as this script, or configure via $confdir
+# Configure the script to run ONCE a day via cron or other scheduler
+

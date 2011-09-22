@@ -1,0 +1,25 @@
+# Info
+#
+# The purpose of this script is to scan a range of network addresses and nitify by mail about the following changes
+# New host
+# Host removed from network
+# services has been changed
+# 
+# The script will use nmap to probe which hosts are alive and will scan them accordingly
+# Linux: should have a $linuxport open & listenning
+#        will scan by ssh (will need key authentication, passwordless) see $ssh variable
+# Windows: should have the $winport port opened & listenning
+#          will be scanned by a windows proxy server which insalled with ssh (key authentication) see $winssh variable
+# 	   should have powershell installed and WMI access to the windows servers
+# 
+# Directories & Files
+# $rootdir - will need to be a directory with rw permission
+# $rootdir/var - will need to be a directory with rw permission
+# $rootdir/hosts.cfg - will be used by nmap to know which hosts/network to scan (see man nmap)
+# $rootdir/exclude.cfg - will be used by nmap to know which hosts/network to exclude (see man nmap)
+# 
+# $sendto - mail address to send the notification
+# $rotation - how many scans to keep in rotation
+# 
+# Configure the script as you like via cron or other scheduler
+
