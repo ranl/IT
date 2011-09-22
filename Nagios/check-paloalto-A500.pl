@@ -42,7 +42,7 @@ sub FSyntaxError {
 	print "$script_name\n";
 	print "-H = Ip/Dns Name of the FW\n";
 	print "-C = SNMP Community\n";
-	print "-t = Check type\n";
+	print "-t = Check type (currently only cpu)\n";
 	print "-w = Warning Value\n";
 	print "-c = Critical Value\n";
 	exit(3);
