@@ -118,7 +118,6 @@ sub FSyntaxError {
 	print "\tcpu    	- CPU Load\n";
 	print "\tmem    	- Memory\n";
 	print "\tmodule		- Module Health\n";
-	print "\ttotal_bw	- Total Switch Bandwidth\n";
 	print "\tfreeint - Free eth interfaces for X days (-d)\n";
 	print "\tint - Interface Operation Stat (-i)\n";
 	print "-w = Warning Value\n";
@@ -479,32 +478,6 @@ if($check_type =~ /^temp/) {
 	}
 	
 	$perf = "total_int=$int_number total_eth=$sum total_eth_free=$down";
-
-### Total Switch Bandwidth ###
-
-} elsif($check_type eq "total_bw") {
-	# $S_int_OutOctets
-	my $R_tbl = $snmp_session->get_table($S_int_OutOctets);
-	my $sum_out = 0;
-	foreach my $oid ( keys %$R_tbl) {
-		$sum_out = $sum_out + $$R_tbl{$oid};
-	}
-	
-	# $S_int_InOctets
-	my $R_tbl = $snmp_session->get_table($S_int_InOctets);
-	my $sum_in = 0;
-	foreach my $oid ( keys %$R_tbl) {
-		$sum_in = $sum_in + $$R_tbl{$oid};
-	}
-	
-	# Formatting from Byte --> Mbit
-	$sum_out = int($sum_out * 8);
-	$sum_in = int($sum_in * 8);
-	
-	my $unit = "c";
-	
-	$msg = "Total Bandwidth";
-	$perf = "in=$sum_in$unit out=$sum_out$unit";
 
 ### Bad Syntax ###
 
