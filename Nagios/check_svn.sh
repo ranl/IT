@@ -14,7 +14,7 @@
 function FError()
 {
 	echo "Syntax:"
-	echo "$0 [svn server] [http | svn | https] [repos path] [location to check-out]"
+	echo "$0 [svn server] [http | svn | https] [repos path] [location to check-out] [username] [password]"
 	echo "for this check you'll need to create a repository name nagios"
 	echo "Example:"
 	echo "$0 svnsrv http,https CM ${RANDOM}"
@@ -90,9 +90,8 @@ WORKINGCOPY="$4"
 SVNPORT="3690"
 HTTPPORT="80"
 HTTPSPORT="443"
-SVNUSER="svn"
-SVNPASS="12qw34er"
-export PATH=/usr/local/bin:$PATH
+SVNUSER="$5"
+SVNPASS="$6"
 MSG=""
 PREF=""
 ERR="0"
