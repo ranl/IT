@@ -21,7 +21,7 @@ sub FSyntaxError {
 	print "$0 cjs \n";
 	print "\tcjs = Cell Job Summary\n";
 	print "$0 qjs \"queue name\"\n";
-	print "\tqjs = Cell Job Summary\n";
+	print "\tqjs = Queue Job Summary\n";
 	exit(3);
 }
 
