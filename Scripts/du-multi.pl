@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 
+# This Script will scan a directory via du with more than one instance
+# Be carefull this could overload your system if not executed cautiously
+
 use strict;
 use Getopt::Long; Getopt::Long::Configure('bundling');
 
