@@ -1,0 +1,72 @@
+body {
+	margin:0;
+	padding: 0;
+	background-color:#1E90FF;
+}
+
+#zerosize {
+	text-decoration:line-through;
+}
+
+#tdtitle {
+	background-image:url('images/top_bg.gif');
+	font-size:larger;
+	text-decoration: none;
+}
+
+#tdtitle A {
+	text-decoration: none;
+	color:#ffffff;
+}
+
+#tdpath {
+	background-color:#E8E8E8;
+	border:1px solid #000000;
+}
+
+#leftpane {
+	width:33%;
+	background-color:#E8E8E8;
+	border:1px solid #000000;
+}
+
+#chartcap {
+	text-decoration: none;
+	font-size: 15px;
+}
+
+#charttd {
+	width:66%;
+	background-color:#ffffff;
+	border:1px solid #000000;
+	margin:0;
+	padding: 0;
+}
+
+.FileTree {
+	font-family: Georgia;
+	font-size: 10px;
+	letter-spacing: 1px;
+}
+
+.FileTree A {
+	color: #000000;
+	text-decoration: none;
+}
+
+.FileTree A:hover {
+	color: #FF0000;
+}
+
+.FileTree .up {
+	list-style-image: url(images/arrow-back.png);
+}
+
+.FileTree .directory {
+	list-style-image: url(images/folder.png);
+}
+
+.FileTree .parent-files {
+	list-style-image: url(images/file.png);
+}
+
