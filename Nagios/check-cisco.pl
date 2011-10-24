@@ -22,8 +22,7 @@ my $script_name = "check-cisco.pl";
 ### SNMP OIDs
 ###############
 # Temperature
-my $S_temp_3000 = ".1.3.6.1.4.1.9.9.13.1.3.1.3.1005";
-my $S_temp_4000 = ".1.3.6.1.4.1.9.9.13.1.3.1.3.1";
+my $S_temp = ".1.3.6.1.4.1.9.9.13.1.3.1.3";
 # Memory
 my $S_mem_used = ".1.3.6.1.4.1.9.9.48.1.1.1.5.1"; # Byte
 my $S_mem_free = ".1.3.6.1.4.1.9.9.48.1.1.1.6.1"; # Byte
@@ -165,12 +164,14 @@ while(@ARGV) {
 }
 
 # Validate Warning
-if($warn > $crit and "$check_type" ne "freeint") {
-	print "Warning can't be larger then Critical: $warn > $crit\n";
-	FSyntaxError();
-} elsif($warn < $crit and "$check_type" eq "freeint") {
-	print "Warning can't be smaller then Critical: $warn < $crit in intfree check\n";
-	FSyntaxError();
+if("$check_type" ne "temp") {
+	if($warn > $crit and "$check_type" ne "freeint") {
+		print "Warning can't be larger then Critical: $warn > $crit\n";
+		FSyntaxError();
+	} elsif($warn < $crit and "$check_type" eq "freeint") {
+		print "Warning can't be smaller then Critical: $warn < $crit in intfree check\n";
+		FSyntaxError();
+	}
 }
 
 # Establish SNMP Session
@@ -178,16 +179,11 @@ our $snmp_session = _create_session($switch,$community);
 
 ### Temperature ###
 if($check_type =~ /^temp/) {
-	my $type;
-	
-	my $R_temp = $snmp_session->get_request(-varbindlist => [$S_temp_4000]);
-	my $temp = "$R_temp->{$S_temp_4000}";
-	if("$temp" eq "") {
-		$type = "b";
-		$R_temp = $snmp_session->get_request(-varbindlist => [$S_temp_3000]);
-		$temp = "$R_temp->{$S_temp_3000}";
-	} else {
-		$type = "c";
+	my $temp;
+	my $R_tbl = $snmp_session->get_table($S_temp);
+	foreach my $oid ( keys %$R_tbl) {
+		$temp = "$$R_tbl{$oid}";
+		last;
 	}
 	
 	if("$temp" eq "") {
@@ -195,7 +191,11 @@ if($check_type =~ /^temp/) {
 		FSyntaxError();
 	}
 	
-	if("$type" eq "c") {
+	if($temp > 1) {
+		if($warn > $crit and "$check_type") {
+			print "Warning can't be larger then Critical: $warn > $crit\n";
+			FSyntaxError();
+		}
 		if($temp <= $warn) {
 			$stat = 0;
 			$msg = "Temperature: OK - Tempeture is $temp Celsius";
@@ -208,6 +208,10 @@ if($check_type =~ /^temp/) {
 		}
 		$perf = "temperature=$temp;$warn;$crit";
 	} else {
+		if($warn > 0 or $crit > 0) {
+			print "ERR:\nSome switches only show boolean value 0=OK 1=ERROR\nplease dont use -w and -c arguments\n\n";
+			FSyntaxError();
+		}
 		if($temp == 1) {
 			$stat = 0;
 			$msg = "Temperature: OK";
