@@ -165,10 +165,13 @@ while(@ARGV) {
 
 # Validate Warning
 if("$check_type" ne "temp") {
-	if($warn > $crit and "$check_type" ne "freeint") {
+	if($warn > $crit and "$check_type" ne "freeint" and "$check_type" ne "mem") {
 		print "Warning can't be larger then Critical: $warn > $crit\n";
 		FSyntaxError();
 	} elsif($warn < $crit and "$check_type" eq "freeint") {
+		print "Warning can't be smaller then Critical: $warn < $crit in intfree check\n";
+		FSyntaxError();
+	} elsif($warn < $crit and "$check_type" eq "mem") {
 		print "Warning can't be smaller then Critical: $warn < $crit in intfree check\n";
 		FSyntaxError();
 	}
