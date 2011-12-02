@@ -235,17 +235,17 @@ if($check_type =~ /^temp/) {
 	$mem_free = int($mem_free / 1024 / 1024);
 	$mem_total = int($mem_total / 1024 / 1024);
 	
-	my $mem_free_prec = int($mem_free / $mem_total * 100);
+	my $mem_free_perc = int($mem_free / $mem_total * 100);
 	
-	if($mem_free_prec <= $warn) {
+	if($mem_free_perc > $warn) {
 		$stat = 0;
-		$msg = "Memory: OK - Free Memory $mem_free_prec%";
-	}  elsif($mem_free_prec > $warn and $mem_free_prec < $crit) {
+		$msg = "Memory: OK - Free Memory $mem_free_perc%";
+	}  elsif($mem_free_perc <= $warn and $mem_free_perc > $crit) {
 		$stat = 1;
-		$msg = "Memory: Warn - Free Memory $mem_free_prec %";
-	} elsif($mem_free_prec >= $crit) {
+		$msg = "Memory: Warn - Free Memory $mem_free_perc %";
+	} elsif($mem_free_perc <= $crit) {
 		$stat = 2;
-		$msg = "Memory: CRIT - Free Memory $mem_free_prec %";
+		$msg = "Memory: CRIT - Free Memory $mem_free_perc %";
 	}
 
 	$perf = "memory_total=$mem_total\MB memory_used=$mem_used\MB";
