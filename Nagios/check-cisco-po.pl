@@ -111,7 +111,7 @@ my $operationStatus = _get_oid_value($snmp_session,"$S_int_operstatus.$snmpId");
 if($operationStatus ne 1)
 {
 	$stat = $CRITICAL;
-	$msg = "CRIT: Port-channel$opt{'interface'} is $int_status_index{'$operationStatus'}";
+	$msg = "CRIT: Port-channel$opt{'interface'} is $int_status_index{$operationStatus}";
 	$perf = "upInts=0";
 }
 
@@ -123,7 +123,7 @@ if($stat == $OK)
 	if($speed == $expectedSpeed) # Everthing is ok
 	{
 		$stat = $OK;
-		$msg = "OK: Port-channel$opt{'interface'} is $int_status_index{'$operationStatus'}";
+		$msg = "OK: Port-channel$opt{'interface'} is $int_status_index{$operationStatus}";
 		$perf = "upInts=$opt{'numIfInts'}";
 	}
 	else # at least one or more interfaces are down, calculate how many
