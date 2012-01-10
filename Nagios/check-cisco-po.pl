@@ -130,7 +130,7 @@ if($stat == $OK)
 	{
 		my $upInts = $opt{'numIfInts'} - int($speed / $opt{'speed'});
 		$stat = $WARNING;
-		$msg = "WARNING: $upInts/$opt{'numIfInts'} in Port-channel$opt{'interface'} are up";
+		$msg = "WARNING: $upInts/$opt{'numIfInts'} in Port-channel$opt{'interface'} are down";
 		$perf = "upInts=$upInts";
 	}
 }
