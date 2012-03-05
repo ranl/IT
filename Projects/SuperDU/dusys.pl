@@ -124,7 +124,6 @@ while(<CONFIG>) {
 	}
 	
 	foreach my $root (keys %path_2_scan) {
-		if(lc($line[0]) eq lc($root)) { print "duplicate entries (not case sensitive)\nline $count: $line[0]\n"; exit(1); };
 		if($line[1] eq $path_2_scan{$root}{'directory'}) { print "duplicate entries\nline $count: $line[1]\n"; exit(1); };
 	}
 	
@@ -366,5 +365,5 @@ $connect->disconnect();
 ###### Exit nicely ######
 _logger("Bye Bye");
 # Removing lock file
-unlink($lockfile);
+`rm -f $lockfile`
 exit(0);
