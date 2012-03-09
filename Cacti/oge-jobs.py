@@ -14,6 +14,7 @@ import re
 import string
 import sys
 
+# Exclude function
 def isInList(string, dst) :
 	res = False
 	for i in range(len(dst)):
@@ -27,6 +28,7 @@ def isInList(string, dst) :
 gridSettings = '/path/to/common/settings.sh'
 excludeQueues = []
 
+# Validate command arguments
 if len(sys.argv) != 2:
 	print "Syntax error"
 	print sys.argv[0] + ' [execHost]'
@@ -43,7 +45,7 @@ qhost = subprocess.Popen('source ' + gridSettings + '; ' + 'qhost -q', shell=Tru
 out = qhost.communicate()[0].splitlines( )
 exitCode = qhost.returncode
 
-# If an erroe occured -> out
+# If an error occured -> quit
 if exitCode != 0 :
 	for line in out : print line
 	quit(1)

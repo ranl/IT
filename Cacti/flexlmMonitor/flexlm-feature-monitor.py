@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# Info
+# parses lmstat utility to get license usage of a specific feature
+
 # Modules
 import subprocess
 import re
@@ -8,7 +11,6 @@ import os.path
 
 # Settings
 lmutil = os.path.dirname(sys.argv[0])
-#lmutil = '/path/to/lmutil'
 
 # Validate settings
 if len(sys.argv) != 4 :
