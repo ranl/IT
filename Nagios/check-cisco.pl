@@ -118,11 +118,12 @@ sub FSyntaxError {
 	print "\tmem    	- Memory\n";
 	print "\tmodule		- Module Health\n";
 	print "\tfreeint - Free eth interfaces for X days (-d)\n";
-	print "\tint - Interface Operation Stat (-i)\n";
+	print "\tint - Interface Operation Stat (use with -i or -o)\n";
 	print "-w = Warning Value\n";
 	print "-c = Critical Value\n";
 	print "-d = number of days that th ethernet interface hasn't change state, default is 14 (only for -t freeint)\n";
 	print "-i = Interface Name (only for -t int)\n";
+	print "-o = Interface OID (only for -t int)\n";
 	exit(3);
 }
 
@@ -138,6 +139,7 @@ my $check_type;
 my $warn = 0;
 my $crit = 0;
 my $int;
+my $oidint;
 
 while(@ARGV) {
 	my $temp = shift(@ARGV);
@@ -153,6 +155,8 @@ while(@ARGV) {
 		$crit = shift(@ARGV);
 	} elsif("$temp" eq '-i') {
 		$int = shift(@ARGV);
+	} elsif("$temp" eq '-o') {
+		$oidint = shift(@ARGV);
 	} elsif("$temp" eq '-d') {
 		$days = shift(@ARGV);
 		if("$days" eq "") {
@@ -256,7 +260,13 @@ if($check_type =~ /^temp/) {
 ### Interface Stat ###
 
 } elsif($check_type eq "int") {
-	my $R_tbl = $snmp_session->get_table($S_int_desc);
+	my $R_tbl;
+	if ($oidint) {
+		$R_tbl = $snmp_session->get_request(-varbindlist => ["$oidint"]);
+		$int = $$R_tbl{"$oidint"};
+	} else {
+		$R_tbl = $snmp_session->get_table($S_int_desc);
+	}
 	my $is_int_exists = 0;
 	foreach my $oid ( keys %$R_tbl) {
 		my $name = "$$R_tbl{$oid}";
