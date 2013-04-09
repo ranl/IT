@@ -94,7 +94,7 @@ my $snmpId;
 my $R_tbl = $snmp_session->get_table($S_int_desc);
 my $is_int_exists = 0;
 foreach my $oid ( keys %$R_tbl) {
-	if($$R_tbl{$oid} eq "Port-channel$opt{'interface'}")
+	if($$R_tbl{$oid} =~ "[Pp]ort-channel$opt{'interface'}\$")
 	{
 		$snmpId = "$oid";
 		$snmpId =~ s/$S_int_desc\.//;
