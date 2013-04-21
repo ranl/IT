@@ -55,7 +55,7 @@ def prepareOpts():
 def wget():
     echo('issuing http requests:')
     out = None
-    for i in range(1, opts.retries):
+    for i in range(1, opts.retries+1):
         echo('issuing http request: {0}'.format(i))
         try:
             out = urllib2.urlopen(opts.url,timeout=opts.timeout).read().splitlines()
