@@ -74,10 +74,10 @@ def grep():
             return True
     else:
         if out != None:
-	    echo('grepping ...')
+            echo('grepping ...')
             for row in out:
                 if opts.grep in row:
-	            echo('found {0} in {1}'.format(opts.grep, row))
+                    echo('found {0} in {1}'.format(opts.grep, row))
                     return True
     return False
 
