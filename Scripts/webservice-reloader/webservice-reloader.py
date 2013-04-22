@@ -43,7 +43,8 @@ def prepareOpts():
     parser.add_option("-c", "--cmd", dest="cmd", type="string", help="command to execute on failure")
     parser.add_option("-t", "--timeout", dest="timeout", type="int", help="how many seconds to wait for each http request", default=5)
     parser.add_option("-r", "--retries", dest="retries", type="int", help="how many time to try before failing", default=5)
-    parser.add_option("-s", "--sleep", dest="sleep", type="int", help="number of seconds to wait between each iteration", default=300)
+    parser.add_option("-s", "--sleep", dest="sleep", type="int", help="number of seconds to wait between each iteration", default=60)
+    parser.add_option("-d", "--disable", dest="disable", type="int", help="number of iteration to wait after command execution", default=5)
     parser.add_option("-v", "--verbose", action="store_true", dest="verbose", help="verbose")
     (opts, args) = parser.parse_args()
     if opts.url is None or opts.cmd is None:
@@ -86,22 +87,28 @@ def signal_handler(signal, frame):
     sys.exit(0)
 
 # Main
+aftercmd = 0
 signal.signal(signal.SIGINT, signal_handler)
 opts = prepareOpts()
 echo('Verbose is on')
 
 while True:
-    out = wget()
-    if grep():
-        echo('looks good -> doing nothing ...')
+    if aftercmd == 0:
+        out = wget()
+        if grep():
+            echo('looks good -> doing nothing ...')
+        else:
+            echo('could not grep {0}'.format(opts.grep))
+            echo('executing cmd: {0}'.format(opts.cmd))
+            cmdres = myShell(opts.cmd)
+            if opts.verbose:
+                pp = pprint.PrettyPrinter(indent=4)
+                pp.pprint(cmdres)
+            ex = cmdres['exit']
+            aftercmd = opts.disable
     else:
-        echo('could not grep {0}'.format(opts.grep))
-        echo('executing cmd: {0}'.format(opts.cmd))
-        cmdres = myShell(opts.cmd)
-        if opts.verbose:
-            pp = pprint.PrettyPrinter(indent=4)
-            pp.pprint(cmdres)
-        ex = cmdres['exit']
+        echo('command was exceuted before iteration, waiting {0} iterations'.format(aftercmd))
+        aftercmd-=1
     time.sleep(opts.sleep)
 
 exit(0)

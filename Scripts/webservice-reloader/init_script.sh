@@ -15,15 +15,21 @@
 export DAEMON="$(basename $0)"
 export PIDFILE=/var/run/$DAEMON.pid
 export lockfile="/var/lock/subsys/$DAEMON"
-[ -f "/etc/sysconfig/$DAEMON" ] && source /etc/sysconfig/$DAEMON
+source /etc/sysconfig/$DAEMON &> /dev/null
+[ -z "$URL" ] && {
+  echo -n $"Missing URL variable in /etc/sysconfig/$DAEMON"
+	failure
+	echo
+	exit 1
+}
 
-# Settings to put in /etc/sysconfig/$DAEMON
-#URL=
-#GREP=
-#CMD=
-#TIMEOUT=
-#RETRIES=
-#SLEEP=
+# Defaults
+[ -z "$CMD" ] && CMD=true
+[ -z "$TIMEOUT" ] && TIMEOUT=5
+[ -z "$RETRIES" ] && RETRIES=5
+[ -z "$SLEEP" ] && SLEEP=60
+[ -z "$DISABLE" ] && DISABLE=5
+
 
 # Functions
 function _start()
@@ -37,7 +43,7 @@ function _start()
 		echo
 		exit 0
 	else
-		webservice-reloader.py -u "$URL" -g "$GREP" -c "$CMD" -t "$TIMEOUT" -r "$RETRIES" -s "$SLEEP" &> /dev/null &
+		webservice-reloader.py -u "$URL" -g "$GREP" -c "$CMD" -t "$TIMEOUT" -r "$RETRIES" -s "$SLEEP" -d "$DISABLE" &> /dev/null &
     echo $! > $PIDFILE
     sleep 2
 		ps -p $(cat $PIDFILE 2> /dev/null) &> /dev/null
