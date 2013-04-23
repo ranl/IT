@@ -41,7 +41,7 @@ def prepareOpts():
     parser.add_option("-u", "--url", dest="url", type="string", help="url to check")
     parser.add_option("-g", "--grep", dest="grep", type="string", help="string to grep in the URL")
     parser.add_option("-c", "--cmd", dest="cmd", type="string", help="command to execute on failure")
-    parser.add_option("-t", "--timeout", dest="timeout", type="int", help="how many seconds to wait for each http request", default=5)
+    parser.add_option("-t", "--timeout", dest="timeout", type="float", help="how many seconds to wait for each http request", default=5)
     parser.add_option("-r", "--retries", dest="retries", type="int", help="how many time to try before failing", default=5)
     parser.add_option("-s", "--sleep", dest="sleep", type="int", help="number of seconds to wait between each iteration", default=60)
     parser.add_option("-d", "--disable", dest="disable", type="int", help="number of iteration to wait after command execution", default=5)
