@@ -30,8 +30,6 @@ source /etc/sysconfig/$DAEMON &> /dev/null
 [ -z "$RETRIES" ] && RETRIES=5
 [ -z "$SLEEP" ] && SLEEP=60
 [ -z "$DISABLE" ] && DISABLE=5
-[ -z "$DEBUG" ] && log=/var/log/$DAEMON
-
 
 # Functions
 function _start()
@@ -45,7 +43,7 @@ function _start()
 		echo
 		exit 0
 	else
-		python -u /usr/bin/webservice-reloader.py -u "$URL" -g "$GREP" -c "$CMD" -t "$TIMEOUT" -r "$RETRIES" -s "$SLEEP" -d "$DISABLE" &> "${log}" &
+		webservice-reloader.py -u "$URL" -g "$GREP" -c "$CMD" -t "$TIMEOUT" -r "$RETRIES" -s "$SLEEP" -d "$DISABLE" -l /var/log/$DAEMON &> /dev/null &
     echo $! > $PIDFILE
     sleep 2
 		ps -p $(cat $PIDFILE 2> /dev/null) &> /dev/null
@@ -70,7 +68,7 @@ function _stop()
 	status -p $PIDFILE $lockfile &> /dev/null
 	if [ $? != 3 ]
 	then
-		kill -9 $(cat $PIDFILE 2> /dev/null)
+		kill -9 $(cat $PIDFILE 2> /dev/null) &> /dev/null
 		if [ $? == 0 ]
 		then
 			rm -f $PIDFILE $lockfile

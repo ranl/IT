@@ -10,10 +10,11 @@ if the url is not available -> it will issue the command cmd
 from optparse import OptionParser
 import urllib2
 import subprocess
-import pprint
 import time
 import signal
 import sys
+import logging
+import os
 
 # Functions
 def myShell(cmd):
@@ -32,10 +33,6 @@ def myShell(cmd):
     res['exit'] = proc.returncode
     return res
 
-def echo(str):
-    if opts.verbose:
-        print str
-
 def prepareOpts():
     parser = OptionParser()
     parser.add_option("-u", "--url", dest="url", type="string", help="url to check")
@@ -45,7 +42,7 @@ def prepareOpts():
     parser.add_option("-r", "--retries", dest="retries", type="int", help="how many time to try before failing", default=5)
     parser.add_option("-s", "--sleep", dest="sleep", type="int", help="number of seconds to wait between each iteration", default=60)
     parser.add_option("-d", "--disable", dest="disable", type="int", help="number of iteration to wait after command execution", default=5)
-    parser.add_option("-v", "--verbose", action="store_true", dest="verbose", help="verbose")
+    parser.add_option("-l", "--log", dest="log", type="string", help="email to send notification on command execution", default=None)
     (opts, args) = parser.parse_args()
     if opts.url is None or opts.cmd is None:
         parser.print_help()
@@ -54,60 +51,73 @@ def prepareOpts():
     return opts
 
 def wget():
-    echo('issuing http requests:')
+    log.debug('issuing http requests:')
     out = None
     for i in range(1, opts.retries+1):
-        echo('issuing http request: {0}'.format(i))
+        log.debug('issuing http request: {0}'.format(i))
         try:
             out = urllib2.urlopen(opts.url,timeout=opts.timeout).read().splitlines()
         except:
             out = None
             time.sleep(2)
         else:
-            echo('http request succeeded')
+            log.debug('http request succeeded')
             break
     return out
 
 def grep():
     if opts.grep == None:
         if out != None:
-            echo('no need to grep -> exit')
+            log.debug('no need to grep -> exit')
             return True
     else:
         if out != None:
-            echo('grepping ...')
+            log.debug('grepping ...')
             for row in out:
                 if opts.grep in row:
-                    echo('found {0} in {1}'.format(opts.grep, row))
+                    log.debug('found {0} in {1}'.format(opts.grep, row))
                     return True
     return False
 
 def signal_handler(signal, frame):
-    echo('Captured SIGINT, exiting ...')
+    log.debug('Captured SIGINT, exiting ...')
     sys.exit(0)
+
+def getlogger(logfile=None):
+    name = os.path.basename(sys.argv[0])
+    if logfile:
+        logging.basicConfig(datefmt='%d-%m-%Y %I:%M:%S',
+                            format='%(asctime)s %(levelname)s: %(message)s',
+                            level=logging.DEBUG,
+                            filename=logfile,
+                            )
+    else:
+        logging.basicConfig(datefmt='%d-%m-%Y %I:%M:%S',
+                            format='%(asctime)s %(levelname)s: %(message)s',
+                            level=logging.DEBUG,
+                            )
+    return logging.getLogger(name)   
 
 # Main
 aftercmd = 0
 signal.signal(signal.SIGINT, signal_handler)
 opts = prepareOpts()
-echo('Verbose is on')
+log = getlogger(opts.log)
 
 while True:
     if aftercmd == 0:
         out = wget()
         if grep():
-            echo('looks good -> doing nothing ...')
+            log.debug('looks good -> doing nothing ...')
         else:
-            echo('could not grep {0}'.format(opts.grep))
-            echo('executing cmd: {0}'.format(opts.cmd))
+            log.debug('could not grep {0}'.format(opts.grep))
+            log.debug('executing cmd: {0}'.format(opts.cmd))
             cmdres = myShell(opts.cmd)
-            if opts.verbose:
-                pp = pprint.PrettyPrinter(indent=4)
-                pp.pprint(cmdres)
+            log.debug(cmdres)
             ex = cmdres['exit']
             aftercmd = opts.disable
     else:
-        echo('command was exceuted before iteration, waiting {0} iterations'.format(aftercmd))
+        log.debug('command was exceuted before iteration, waiting {0} iterations'.format(aftercmd))
         aftercmd-=1
     time.sleep(opts.sleep)
 
