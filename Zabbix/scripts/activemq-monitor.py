@@ -17,22 +17,25 @@ def prepareOpts():
 	Parse option from the shell
 	'''
 	
+	cmds = ['queue_prop', 'discovery', 'subscriber_exists']
+	datas = ['size', 'consumerCount', 'enqueueCount', 'dequeueCount']
+
 	def err( string ):
 		print 'Error: {0}'.format( string )
 		parser.print_help()
 		print __doc__
 		exit(1)
-	
-	
+
 	parser = OptionParser()
 	parser.add_option('-s', '--server', dest='server', type='string', help='ActiveMQ fqdn or ip', default='localhost')
 	parser.add_option('-p', '--port', dest='port', type='int', help='ActiveMQ web interface port', default=8161)
 	parser.add_option('-t', '--timeout', dest='timeout', type='float', help='how many seconds to wait for each http request', default=5)
-	parser.add_option('-c', '--cmd', dest='cmd', type='choice', choices=['queue_prop', 'discovery', 'subscriber_exists'], help='what to check')
+	parser.add_option('-c', '--cmd', dest='cmd', type='choice', choices=cmds, help='what to check: {0}'.format(cmds) )
 	parser.add_option('-q', '--queue', dest='queue', type='string', help='the name of the queue (implies -c queue_prop or -c subscriber_exists)')
-	parser.add_option('-d', '--data', dest='data', type='choice', choices=['size', 'consumerCount', 'enqueueCount', 'dequeueCount'], help='the name of the property to return (implies -c queue_prop or -c subscriber_exists)')
+	parser.add_option('-d', '--data', dest='data', type='choice', choices=datas, help='the name of the property to return {0} (implies -c queue_prop or -c subscriber_exists)'.format(datas) )
 	parser.add_option('-C', '--client', dest='client', type='string', help='the client prefix to search (implies -c subscriber_exists and -q)' )
 	(opts, args) = parser.parse_args()
+
 	
 	if not opts.cmd:
 		err('missing -c')
